@@ -24,4 +24,17 @@ class SudokuSolver {
     solve(puzzleString) {}
 }
 
+const createMatrix = (puzzleString) => {
+    let matrix = [];
+    let row = [];
+    for (let i = 0; i <= puzzleString.length - 1; i++) {
+        row.push(puzzleString[i]);
+        if (row.length === 9) {
+            matrix.push(row);
+            row = [];
+        }
+    }
+    return matrix;
+};
+
 module.exports = SudokuSolver;
