@@ -17,7 +17,7 @@ class SudokuSolver {
 
     checkRowPlacement(puzzleString, row, value) {
         const board = createMatrix(puzzleString);
-        const rowNum = rowMap[row];
+        const rowNum = rowMap[row.toUpperCase()];
         const currentRow = board[rowNum];
         if (currentRow.includes(value)) {
             return false;
@@ -38,7 +38,7 @@ class SudokuSolver {
 
     checkRegionPlacement(puzzleString, row, column, value) {
         const board = createMatrix(puzzleString);
-        const rowNum = rowMap[row];
+        const rowNum = rowMap[row.toUpperCase()];
         const columnNum = +column - 1;
         const startRow = Math.floor(rowNum / 3) * 3;
         const startCol = Math.floor(columnNum / 3) * 3;
