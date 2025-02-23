@@ -25,22 +25,32 @@ class SudokuSolver {
         return true;
     }
 
-    checkColPlacement(puzzleString, row, column, value) {
+    checkColPlacement(puzzleString, column, value) {
         const board = createMatrix(puzzleString);
-        const rowNum = rowMap[row];
         const columnNum = +column - 1;
         for (let i = 0; i < board.length; i++) {
-            if (
-                board[i][columnNum] === value &&
-                board[rowNum] !== i
-            ) {
+            if (board[i][columnNum] === value) {
                 return false;
             }
         }
         return true;
     }
 
-    checkRegionPlacement(puzzleString, row, column, value) {}
+    checkRegionPlacement(puzzleString, row, column, value) {
+        const board = createMatrix(puzzleString);
+        const rowNum = rowMap[row];
+        const columnNum = +column - 1;
+        const startRow = Math.floor(rowNum / 3) * 3;
+        const startCol = Math.floor(columnNum / 3) * 3;
+        for (let i = startRow; i < startRow + 3; i++) {
+            for (let j = startCol; j < startCol + 3; j++) {
+                if (board[i][j] === value) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     solve(puzzleString) {}
 }
