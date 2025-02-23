@@ -25,7 +25,20 @@ class SudokuSolver {
         return true;
     }
 
-    checkColPlacement(puzzleString, row, column, value) {}
+    checkColPlacement(puzzleString, row, column, value) {
+        const board = createMatrix(puzzleString);
+        const rowNum = rowMap[row];
+        const columnNum = +column - 1;
+        for (let i = 0; i < board.length; i++) {
+            if (
+                board[i][columnNum] === value &&
+                board[rowNum] !== i
+            ) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     checkRegionPlacement(puzzleString, row, column, value) {}
 
