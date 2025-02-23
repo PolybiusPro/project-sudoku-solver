@@ -15,7 +15,15 @@ class SudokuSolver {
         return { valid: true };
     }
 
-    checkRowPlacement(puzzleString, row, column, value) {}
+    checkRowPlacement(puzzleString, row, value) {
+        const board = createMatrix(puzzleString);
+        const rowNum = rowMap[row];
+        const currentRow = board[rowNum];
+        if (currentRow.includes(value)) {
+            return false;
+        }
+        return true;
+    }
 
     checkColPlacement(puzzleString, row, column, value) {}
 
