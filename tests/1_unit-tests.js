@@ -5,6 +5,7 @@ const Solver = require("../controllers/sudoku-solver.js");
 import { puzzlesAndSolutions } from "../controllers/puzzle-strings.js";
 let solver = new Solver();
 
+const validPuzzleString = puzzlesAndSolutions[0][0];
 const invalidCharString = puzzlesAndSolutions[0][0].replace(".", "e");
 const invalidLengthString = puzzlesAndSolutions[0][0].substring(1);
 
@@ -28,6 +29,63 @@ suite("Unit Tests", () => {
             solver.validate(invalidLengthString).error,
             "Expected puzzle to be 81 characters long"
         );
+        done();
+    });
+    test("Logic handles a valid row placement", (done) => {
+        const result = solver.checkPlacement(
+            validPuzzleString,
+            "A2",
+            "3"
+        );
+        assert.isTrue(result.valid);
+        done();
+    });
+    test("Logic handles a invalid row placement", (done) => {
+        const result = solver.checkPlacement(
+            validPuzzleString,
+            "A2",
+            "4"
+        );
+        assert.isFalse(result.valid);
+        assert.include(result.conflict, "row");
+        done();
+    });
+    test("Logic handles a valid column placement", (done) => {
+        const result = solver.checkPlacement(
+            validPuzzleString,
+            "b1",
+            "5"
+        );
+        assert.isTrue(result.valid);
+        done();
+    });
+    test("Logic handles a invalid column placement", (done) => {
+        const result = solver.checkPlacement(
+            validPuzzleString,
+            "b1",
+            "1"
+        );
+        assert.isFalse(result.valid);
+        assert.include(result.conflict, "column");
+        done();
+    });
+    test("Logic handles a valid region (3x3 grid) placement", (done) => {
+        const result = solver.checkPlacement(
+            validPuzzleString,
+            "a2",
+            "3"
+        );
+        assert.isTrue(result.valid);
+        done();
+    });
+    test("Logic handles a invalid region (3x3 grid) placement", (done) => {
+        const result = solver.checkPlacement(
+            validPuzzleString,
+            "b2",
+            "5"
+        );
+        assert.isFalse(result.valid);
+        assert.include(result.conflict, "region");
         done();
     });
 });
