@@ -54,7 +54,7 @@ suite("Unit Tests", () => {
         const result = solver.checkPlacement(
             validPuzzleString,
             "b1",
-            "5"
+            "9"
         );
         assert.isTrue(result.valid);
         done();
