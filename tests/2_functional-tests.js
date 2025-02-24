@@ -8,7 +8,7 @@ const validPuzzle = puzzlesAndSolutions[0][0];
 const validSolution = puzzlesAndSolutions[0][1];
 const invalidCharString = puzzlesAndSolutions[0][0].replace(".", "e");
 const invalidLengthString = puzzlesAndSolutions[0][0].substring(1);
-const invalidPuzzle = validPuzzleString.replaceAll("5", "8");
+const invalidPuzzle = validPuzzle.replaceAll("5", "8");
 
 chai.use(chaiHttp);
 
@@ -18,7 +18,7 @@ suite("Functional Tests", () => {
             .post("/api/solve")
             .send({ puzzle: validPuzzle })
             .end((err, res) => {
-                assert.strictEqual(res.solution, validSolution);
+                assert.strictEqual(res.body.solution, validSolution);
                 done();
             });
     });
@@ -28,7 +28,7 @@ suite("Functional Tests", () => {
             .send({ puzzle: "" })
             .end((err, res) => {
                 assert.strictEqual(
-                    res.error,
+                    res.body.error,
                     "Required field missing"
                 );
                 done();
@@ -40,7 +40,7 @@ suite("Functional Tests", () => {
             .send({ puzzle: invalidCharString })
             .end((err, res) => {
                 assert.strictEqual(
-                    res.error,
+                    res.body.error,
                     "Invalid characters in puzzle"
                 );
                 done();
@@ -52,7 +52,7 @@ suite("Functional Tests", () => {
             .send({ puzzle: invalidLengthString })
             .end((err, res) => {
                 assert.strictEqual(
-                    res.error,
+                    res.body.error,
                     "Expected puzzle to be 81 characters long"
                 );
                 done();
@@ -64,7 +64,7 @@ suite("Functional Tests", () => {
             .send({ puzzle: invalidPuzzle })
             .end((err, res) => {
                 assert.strictEqual(
-                    res.error,
+                    res.body.error,
                     "Puzzle cannot be solved"
                 );
                 done();
@@ -79,7 +79,7 @@ suite("Functional Tests", () => {
                 value: "3",
             })
             .end((err, res) => {
-                assert.isTrue(res.valid);
+                assert.isTrue(res.body.valid);
                 done();
             });
     });
@@ -92,7 +92,7 @@ suite("Functional Tests", () => {
                 value: "7",
             })
             .end((err, res) => {
-                assert.strictEqual(res.conflict.length, 1);
+                assert.strictEqual(res.body.conflict.length, 1);
                 done();
             });
     });
@@ -105,7 +105,7 @@ suite("Functional Tests", () => {
                 value: "7",
             })
             .end((err, res) => {
-                assert.strictEqual(res.conflict.length, 2);
+                assert.strictEqual(res.body.conflict.length, 2);
                 done();
             });
     });
@@ -118,7 +118,7 @@ suite("Functional Tests", () => {
                 value: "6",
             })
             .end((err, res) => {
-                assert.strictEqual(res.conflict.length, 3);
+                assert.strictEqual(res.body.conflict.length, 3);
                 done();
             });
     });
@@ -132,7 +132,7 @@ suite("Functional Tests", () => {
             })
             .end((err, res) => {
                 assert.strictEqual(
-                    res.error,
+                    res.body.error,
                     "Required field(s) missing"
                 );
                 done();
@@ -148,7 +148,7 @@ suite("Functional Tests", () => {
             })
             .end((err, res) => {
                 assert.strictEqual(
-                    res.error,
+                    res.body.error,
                     "Invalid characters in puzzle"
                 );
                 done();
@@ -158,13 +158,13 @@ suite("Functional Tests", () => {
         chai.request(server)
             .post("/api/check")
             .send({
-                puzzle: invalidCharString,
+                puzzle: invalidLengthString,
                 coordinate: "D9",
                 value: "6",
             })
             .end((err, res) => {
                 assert.strictEqual(
-                    res.error,
+                    res.body.error,
                     "Expected puzzle to be 81 characters long"
                 );
                 done();
@@ -179,7 +179,10 @@ suite("Functional Tests", () => {
                 value: "6",
             })
             .end((err, res) => {
-                assert.strictEqual(res.error, "Invalid coordinate");
+                assert.strictEqual(
+                    res.body.error,
+                    "Invalid coordinate"
+                );
                 done();
             });
     });
@@ -192,7 +195,7 @@ suite("Functional Tests", () => {
                 value: "66",
             })
             .end((err, res) => {
-                assert.strictEqual(res.error, "Invalid value");
+                assert.strictEqual(res.body.error, "Invalid value");
                 done();
             });
     });

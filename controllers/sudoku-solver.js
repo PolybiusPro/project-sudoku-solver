@@ -4,6 +4,12 @@ class SudokuSolver {
     validate(puzzleString) {
         const PUZZLE_REGEX = /^[1-9\.]+$/g;
 
+        if (puzzleString === "") {
+            return {
+                error: "Required field missing",
+            };
+        }
+
         if (puzzleString.length !== 81) {
             return {
                 error: "Expected puzzle to be 81 characters long",
@@ -55,15 +61,29 @@ class SudokuSolver {
         const invalidCoord = {
             error: "Invalid coordinate",
         };
+        const invalidVal = {
+            error: "Invalid value",
+        };
+        const invalidFields = {
+            error: "Required field(s) missing",
+        };
 
         const isValid = this.validate(puzzleString);
         if (!isValid.valid) {
             return isValid;
         }
 
+        if (coord === "" || value === "") {
+            return invalidFields;
+        }
+
         const COORD_REGEX = /^[a-i][1-9]$/i;
+        const VAL_REGEX = /^[1-9]$/;
         if (!COORD_REGEX.test(coord)) {
             return invalidCoord;
+        }
+        if (!VAL_REGEX.test(value)) {
+            return invalidVal;
         }
         const [row, col] = coord.split("");
         const rowNum = rowMap[row.toUpperCase()];
