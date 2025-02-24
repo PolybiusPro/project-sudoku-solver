@@ -79,7 +79,9 @@ class SudokuSolver {
         if (!this.checkColPlacement(board, colNum, value)) {
             badPlacement.conflict.push("column");
         }
-        if (!this.checkColPlacement(board, rowNum, colNum, value)) {
+        if (
+            !this.checkRegionPlacement(board, rowNum, colNum, value)
+        ) {
             badPlacement.conflict.push("region");
         }
         if (badPlacement.conflict.length !== 0) {
