@@ -141,14 +141,15 @@ class SudokuSolver {
                     board[row][col] = EMPTY;
                 }
             }
-            return { error: "Puzzle cannot be solved" };
+            return false;
         };
         bruteForce(0);
-        return board
-            .reduce((acc, curr) => {
-                acc.concat(curr);
-            }, [])[0]
-            .join();
+        const result = board.flat().join("");
+        if (result.includes(".")) {
+            return { error: "Puzzle cannot be solved" };
+        } else {
+            return result;
+        }
     }
 
     createMatrix(puzzleString) {

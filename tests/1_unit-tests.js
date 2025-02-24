@@ -6,6 +6,7 @@ import { puzzlesAndSolutions } from "../controllers/puzzle-strings.js";
 let solver = new Solver();
 
 const validPuzzleString = puzzlesAndSolutions[0][0];
+const validPuzzleSolution = puzzlesAndSolutions[0][1];
 const invalidCharString = puzzlesAndSolutions[0][0].replace(".", "e");
 const invalidLengthString = puzzlesAndSolutions[0][0].substring(1);
 
@@ -86,6 +87,18 @@ suite("Unit Tests", () => {
         );
         assert.isFalse(result.valid);
         assert.include(result.conflict, "region");
+        done();
+    });
+    test("Valid puzzle strings pass the solver", (done) => {
+        const result = solver.solve(validPuzzleString);
+        assert.strictEqual(result, validPuzzleSolution);
+        done();
+    });
+    test("Invalid puzzle strings fail the solver", (done) => {
+        const result = solver.solve(
+            validPuzzleString.replaceAll("5", "8")
+        );
+        assert.strictEqual(result.error, "Puzzle cannot be solved");
         done();
     });
 });
