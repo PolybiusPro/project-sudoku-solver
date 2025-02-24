@@ -101,4 +101,9 @@ suite("Unit Tests", () => {
         assert.strictEqual(result.error, "Puzzle cannot be solved");
         done();
     });
+    test("Solver returns the expected solution for an incomplete puzzle", (done) => {
+        const result = solver.solve(validPuzzleString);
+        assert.strictEqual(result.solution, validPuzzleSolution);
+        done();
+    });
 });
