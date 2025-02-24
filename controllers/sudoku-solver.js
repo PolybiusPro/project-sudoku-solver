@@ -15,33 +15,26 @@ class SudokuSolver {
         return { valid: true };
     }
 
-    checkRowPlacement(puzzleString, row, value) {
-        const board = createMatrix(puzzleString);
-        const rowNum = rowMap[row.toUpperCase()];
-        const currentRow = board[rowNum];
+    checkRowPlacement(board, row, value) {
+        const currentRow = board[row];
         if (currentRow.includes(value)) {
             return false;
         }
         return true;
     }
 
-    checkColPlacement(puzzleString, column, value) {
-        const board = createMatrix(puzzleString);
-        const columnNum = +column - 1;
+    checkColPlacement(board, col, value) {
         for (let i = 0; i < board.length; i++) {
-            if (board[i][columnNum] === value) {
+            if (board[i][col] === value) {
                 return false;
             }
         }
         return true;
     }
 
-    checkRegionPlacement(puzzleString, row, column, value) {
-        const board = createMatrix(puzzleString);
-        const rowNum = rowMap[row.toUpperCase()];
-        const columnNum = +column - 1;
-        const startRow = Math.floor(rowNum / 3) * 3;
-        const startCol = Math.floor(columnNum / 3) * 3;
+    checkRegionPlacement(board, row, col, value) {
+        const startRow = Math.floor(row / 3) * 3;
+        const startCol = Math.floor(col / 3) * 3;
         for (let i = startRow; i < startRow + 3; i++) {
             for (let j = startCol; j < startCol + 3; j++) {
                 if (board[i][j] === value) {
@@ -50,6 +43,49 @@ class SudokuSolver {
             }
         }
         return true;
+    }
+
+    checkPlacement(puzzleString, coord, value) {
+        let badPlacement = {
+            valid: false,
+            conflict: [],
+        };
+        const invalidCoord = {
+            error: "Invalid coordinate",
+        };
+
+        const isValid = this.validate(puzzleString);
+        if (!isValid.valid) {
+            return isValid;
+        }
+
+        const COORD_REGEX = /^[a-i][1-9]$/i;
+        if (!COORD_REGEX.test(coord)) {
+            return invalidCoord;
+        }
+        const [row, col] = coord.split("");
+        const rowNum = rowMap[row.toUpperCase()];
+        const colNum = +col - 1;
+
+        const board = createMatrix(puzzleString);
+
+        if (board[rowNum][colNum] !== ".") {
+            return invalidCoord;
+        }
+
+        if (!this.checkRowPlacement(board, rowNum, value)) {
+            badPlacement.conflict.push("row");
+        }
+        if (!this.checkColPlacement(board, colNum, value)) {
+            badPlacement.conflict.push("column");
+        }
+        if (!this.checkColPlacement(board, rowNum, colNum, value)) {
+            badPlacement.conflict.push("region");
+        }
+        if (badPlacement.conflict.length !== 0) {
+            return badPlacement;
+        }
+        return { valid: true };
     }
 
     solve(puzzleString) {}
