@@ -148,7 +148,7 @@ class SudokuSolver {
         if (result.includes(".")) {
             return { error: "Puzzle cannot be solved" };
         } else {
-            return result;
+            return { solution: result };
         }
     }
 

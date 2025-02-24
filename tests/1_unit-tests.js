@@ -91,7 +91,7 @@ suite("Unit Tests", () => {
     });
     test("Valid puzzle strings pass the solver", (done) => {
         const result = solver.solve(validPuzzleString);
-        assert.strictEqual(result, validPuzzleSolution);
+        assert.strictEqual(result.solution, validPuzzleSolution);
         done();
     });
     test("Invalid puzzle strings fail the solver", (done) => {
