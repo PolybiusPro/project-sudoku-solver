@@ -67,7 +67,7 @@ class SudokuSolver {
         const rowNum = rowMap[row.toUpperCase()];
         const colNum = +col - 1;
 
-        const board = createMatrix(puzzleString);
+        const board = this.createMatrix(puzzleString);
 
         if (board[rowNum][colNum] !== ".") {
             return invalidCoord;
@@ -89,20 +89,20 @@ class SudokuSolver {
     }
 
     solve(puzzleString) {}
-}
 
-const createMatrix = (puzzleString) => {
-    let matrix = [];
-    let row = [];
-    for (let i = 0; i <= puzzleString.length - 1; i++) {
-        row.push(puzzleString[i]);
-        if (row.length === 9) {
-            matrix.push(row);
-            row = [];
+    createMatrix(puzzleString) {
+        let matrix = [];
+        let row = [];
+        for (let i = 0; i <= puzzleString.length - 1; i++) {
+            row.push(puzzleString[i]);
+            if (row.length === 9) {
+                matrix.push(row);
+                row = [];
+            }
         }
+        return matrix;
     }
-    return matrix;
-};
+}
 
 const rowMap = {
     A: 0,
