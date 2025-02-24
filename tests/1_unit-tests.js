@@ -13,8 +13,8 @@ const invalidLengthString = puzzlesAndSolutions[0][0].substring(1);
 suite("Unit Tests", () => {
     test("Logic handles a valid puzzle string of 81 characters", (done) => {
         puzzlesAndSolutions.forEach((puzzle) => {
-            assert.isTrue(solver.validate(puzzle[0]).valid);
-            assert.isTrue(solver.validate(puzzle[1]).valid);
+            assert.isTrue(solver.validate(puzzle[0]));
+            assert.isTrue(solver.validate(puzzle[1]));
         });
         done();
     });
@@ -33,58 +33,34 @@ suite("Unit Tests", () => {
         done();
     });
     test("Logic handles a valid row placement", (done) => {
-        const result = solver.checkPlacement(
-            validPuzzleString,
-            "A2",
-            "3"
-        );
+        const result = solver.checkPlacement(validPuzzleString, "A2", "3");
         assert.isTrue(result.valid);
         done();
     });
     test("Logic handles a invalid row placement", (done) => {
-        const result = solver.checkPlacement(
-            validPuzzleString,
-            "A2",
-            "4"
-        );
+        const result = solver.checkPlacement(validPuzzleString, "A2", "4");
         assert.isFalse(result.valid);
         assert.include(result.conflict, "row");
         done();
     });
     test("Logic handles a valid column placement", (done) => {
-        const result = solver.checkPlacement(
-            validPuzzleString,
-            "b1",
-            "9"
-        );
+        const result = solver.checkPlacement(validPuzzleString, "b1", "9");
         assert.isTrue(result.valid);
         done();
     });
     test("Logic handles a invalid column placement", (done) => {
-        const result = solver.checkPlacement(
-            validPuzzleString,
-            "b1",
-            "1"
-        );
+        const result = solver.checkPlacement(validPuzzleString, "b1", "1");
         assert.isFalse(result.valid);
         assert.include(result.conflict, "column");
         done();
     });
     test("Logic handles a valid region (3x3 grid) placement", (done) => {
-        const result = solver.checkPlacement(
-            validPuzzleString,
-            "a2",
-            "3"
-        );
+        const result = solver.checkPlacement(validPuzzleString, "a2", "3");
         assert.isTrue(result.valid);
         done();
     });
     test("Logic handles a invalid region (3x3 grid) placement", (done) => {
-        const result = solver.checkPlacement(
-            validPuzzleString,
-            "b2",
-            "5"
-        );
+        const result = solver.checkPlacement(validPuzzleString, "b2", "5");
         assert.isFalse(result.valid);
         assert.include(result.conflict, "region");
         done();
@@ -95,9 +71,7 @@ suite("Unit Tests", () => {
         done();
     });
     test("Invalid puzzle strings fail the solver", (done) => {
-        const result = solver.solve(
-            validPuzzleString.replaceAll("5", "8")
-        );
+        const result = solver.solve(validPuzzleString.replaceAll("5", "8"));
         assert.strictEqual(result.error, "Puzzle cannot be solved");
         done();
     });

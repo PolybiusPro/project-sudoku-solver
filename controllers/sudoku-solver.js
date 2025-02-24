@@ -3,18 +3,15 @@ const { resolvePlugin } = require("@babel/core");
 class SudokuSolver {
     validate(puzzleString) {
         const PUZZLE_REGEX = /^[1-9\.]+$/g;
-
         if (puzzleString.length !== 81) {
             return {
                 error: "Expected puzzle to be 81 characters long",
             };
         }
-
         if (!PUZZLE_REGEX.test(puzzleString)) {
             return { error: "Invalid characters in puzzle" };
         }
-
-        return { valid: true };
+        return true;
     }
 
     checkRowPlacement(board, row, col, value) {
@@ -55,39 +52,25 @@ class SudokuSolver {
             valid: false,
             conflict: [],
         };
-        const invalidCoord = {
-            error: "Invalid coordinate",
-        };
-        const invalidVal = {
-            error: "Invalid value",
-        };
 
         const isValid = this.validate(puzzleString);
-        if (!isValid.valid) {
+        if (isValid.error) {
             return isValid;
         }
 
-        const COORD_REGEX = /^[a-i][1-9]$/i;
-        const VAL_REGEX = /^[1-9]$/;
-        if (!COORD_REGEX.test(coord)) {
-            return invalidCoord;
-        }
-        if (!VAL_REGEX.test(value)) {
-            return invalidVal;
-        }
         const [row, col] = coord.split("");
         const rowNum = rowMap[row.toUpperCase()];
         const colNum = +col - 1;
-
         const board = this.createMatrix(puzzleString);
+        const args = [board, rowNum, colNum, value];
 
-        if (!this.checkRowPlacement(board, rowNum, colNum, value)) {
+        if (!this.checkRowPlacement(...args)) {
             badPlacement.conflict.push("row");
         }
-        if (!this.checkColPlacement(board, rowNum, colNum, value)) {
+        if (!this.checkColPlacement(...args)) {
             badPlacement.conflict.push("column");
         }
-        if (!this.checkRegionPlacement(board, rowNum, colNum, value)) {
+        if (!this.checkRegionPlacement(...args)) {
             badPlacement.conflict.push("region");
         }
         if (badPlacement.conflict.length !== 0) {
@@ -99,7 +82,7 @@ class SudokuSolver {
     solve(puzzleString) {
         const possibleNums = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
         const isValid = this.validate(puzzleString);
-        if (!isValid.valid) {
+        if (isValid.error) {
             return isValid;
         }
         const board = this.createMatrix(puzzleString);
