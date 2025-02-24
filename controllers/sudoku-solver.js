@@ -1,3 +1,5 @@
+const { resolvePlugin } = require("@babel/core");
+
 class SudokuSolver {
     validate(puzzleString) {
         const PUZZLE_REGEX = /^[1-9\.]+$/g;
@@ -90,7 +92,64 @@ class SudokuSolver {
         return { valid: true };
     }
 
-    solve(puzzleString) {}
+    solve(puzzleString) {
+        const possibleNums = [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+        ];
+        const isValid = this.validate(puzzleString);
+        if (!isValid.valid) {
+            return isValid;
+        }
+        const board = this.createMatrix(puzzleString);
+        const EMPTY = ".";
+        const emptyCoords = [];
+
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[i].length; j++) {
+                if (board[i][j] === EMPTY) {
+                    emptyCoords.push({ row: i, col: j });
+                }
+            }
+        }
+
+        const bruteForce = (emptyIndex) => {
+            if (emptyIndex >= emptyCoords.length) {
+                return true;
+            }
+
+            const { row, col } = emptyCoords[emptyIndex];
+
+            for (let i = 0; i < possibleNums.length; i++) {
+                let num = possibleNums[i];
+                if (
+                    this.checkRowPlacement(board, row, num) &&
+                    this.checkColPlacement(board, col, num) &&
+                    this.checkRegionPlacement(board, row, col, num)
+                ) {
+                    board[row][col] = num;
+                    if (bruteForce(emptyIndex + 1)) {
+                        return true;
+                    }
+                    board[row][col] = EMPTY;
+                }
+            }
+            return { error: "Puzzle cannot be solved" };
+        };
+        bruteForce(0);
+        return board
+            .reduce((acc, curr) => {
+                acc.concat(curr);
+            }, [])[0]
+            .join();
+    }
 
     createMatrix(puzzleString) {
         let matrix = [];
